@@ -1,0 +1,30 @@
+=== Flutter Doctor ===
+Doctor summary (to see all details, run flutter doctor -v):
+[✓] Flutter (Channel stable, 3.44.1, on CachyOS 7.0.11-1-cachyos, locale en_US.UTF-8)
+[✓] Android toolchain - develop for Android devices (Android SDK version 36.0.0)
+[✗] Chrome - develop for the web (Cannot find Chrome executable at google-chrome)
+[✓] Linux toolchain - develop for Linux desktop
+[✓] Connected device (1 available)
+[✓] Network resources
+! Doctor found issues in 1 category.
+
+=== Git Branches ===
+* develop
+  feature/detail-screen
+  feature/login-screen
+  main
+
+=== Git Log Graph ===
+*   02135d8 (HEAD -> develop) Merge feature/detail-screen into develop
+|\  
+| * 96fe21d (feature/detail-screen) feat: add detail screen with navigator routing from home cards
+|/  
+*   3309a87 Merge feature/login-screen into develop
+|\  
+| * 3bfa9e0 (feature/login-screen) feat: add login screen with form validation and navigation to home
+|/  
+* 0fba1b4 (main) chore: initial Flutter project setup
+
+=== Flutter Analyze ===
+Analyzing mobile_app...                                         
+No issues found! (ran in 1.3s)
