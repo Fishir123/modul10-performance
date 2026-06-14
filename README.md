@@ -1,33 +1,41 @@
-# mobile_app — Modul 9: Testing (Unit Test + Basic UI Test)
+# mobile_app — Modul 10: Performance & Optimization
 
-Menambah testing pada fitur **get posts** (use case `GetPostsUseCase`) hasil
-refactor clean architecture Modul 8.
+Analisis & optimasi performa pada project sendiri (lanjutan Modul 9).
+Screen: HomeScreen & PostsScreen.
 
-## Test yang ditambahkan
+## Masalah → Solusi
 
-`test/get_posts_usecase_test.dart` — 3 unit test (repository di-mock mockito):
-- Success: repo kembalikan data → use case kembalikan data
-- Error: repo melempar Exception → use case meneruskan error
-- Edge: repo kembalikan list kosong → aman, tanpa error
+1. Rebuild berlebihan (HomeScreen)
+   - Sebelum: `context.watch<ThemeProvider>()` di `build()` root → seluruh
+     screen rebuild tiap toggle dark mode.
+   - Sesudah: toggle dipindah ke widget kecil `_DarkModeCard`
+     (`Consumer<ThemeProvider>`) → hanya kartu switch yang rebuild.
 
-`test/login_ui_test.dart` — 1 basic UI test (bonus): Login screen menampilkan
-tombol Masuk + field input.
+2. Widget belum dipisah (PostsScreen)
+   - Sebelum: item list (Card+ListTile) ditulis inline di `itemBuilder`.
+   - Sesudah: dipindah ke `widgets/post_item_card.dart` (`PostItemCard`).
 
-## Menjalankan test
+## Hasil terukur
+
+`test/rebuild_benchmark_test.dart` menghitung rebuild HomeScreen saat 5x toggle:
+
+| Kondisi | Rebuild |
+|---------|---------|
+| Sebelum | 15 |
+| Sesudah | 10 (-33%) |
+
+Sisa 10 = rebuild wajar dari `Theme.of` (inherited widget), bukan pemborosan.
+
+## Menjalankan
 
 ```bash
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs   # generate mock
-flutter test                                                # semua test PASS
+flutter test      # 10 test PASS (termasuk benchmark rebuild)
+flutter run
 ```
-
-## Kenapa mocking
-
-Repository asli memanggil API + cache. Saat test diganti `MockPostRepository`
-agar hasilnya bisa diatur (sukses/gagal/kosong), test cepat, deterministik, dan
-tidak butuh jaringan.
 
 ## Catatan
 
-Project lanjutan dari Modul 8 (clean architecture), bukan project baru.
-Layer domain (UseCase + Repository abstrak) membuat logic mudah diuji terisolasi.
+ListView builder (lazy loading) & logic di repository sudah ada sejak Modul 6/8,
+jadi optimasi yang tersisa difokuskan ke rebuild root + pemisahan widget.
+Penghitung `buildCount` hanya alat observasi, tidak mengubah perilaku app.

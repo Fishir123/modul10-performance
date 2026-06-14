@@ -16,6 +16,9 @@ import 'posts_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  /// Penghitung build() screen ini (observasi performa Modul 10).
+  static int buildCount = 0;
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -65,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    HomeScreen.buildCount++;
     final theme = Theme.of(context);
-    final themeProvider = context.watch<ThemeProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -93,16 +96,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: AppConstants.spacingL),
 
-          // Toggle dark mode (preferensi disimpan lokal).
-          Card(
-            child: SwitchListTile(
-              secondary: const Icon(Icons.dark_mode_outlined),
-              title: const Text('Mode Gelap'),
-              subtitle: const Text('Preferensi disimpan secara lokal'),
-              value: themeProvider.isDarkMode,
-              onChanged: (v) => themeProvider.toggleDarkMode(v),
-            ),
-          ),
+          // Toggle dark mode dipisah ke widget kecil ber-Consumer sendiri
+          // (Fix Modul 10): hanya bagian ini yang rebuild saat tema berubah,
+          // bukan seluruh HomeScreen.
+          const _DarkModeCard(),
           const SizedBox(height: AppConstants.spacingS),
 
           FeatureCard(
@@ -149,6 +146,32 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Kartu toggle dark mode yang berdiri sendiri.
+///
+/// Fix performa Modul 10: hanya widget kecil ini yang mendengarkan
+/// [ThemeProvider] (lewat Consumer), sehingga saat tema di-toggle hanya bagian
+/// ini yang rebuild — bukan seluruh HomeScreen.
+class _DarkModeCard extends StatelessWidget {
+  const _DarkModeCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return Card(
+          child: SwitchListTile(
+            secondary: const Icon(Icons.dark_mode_outlined),
+            title: const Text('Mode Gelap'),
+            subtitle: const Text('Preferensi disimpan secara lokal'),
+            value: themeProvider.isDarkMode,
+            onChanged: (v) => themeProvider.toggleDarkMode(v),
+          ),
+        );
+      },
     );
   }
 }

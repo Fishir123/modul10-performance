@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../domain/repositories/post_repository.dart' show DataSource;
 import '../providers/post_provider.dart';
+import '../widgets/post_item_card.dart';
 
 /// Screen daftar Post dengan caching + offline fallback (Modul 6 Bagian 6 & 7).
 ///
@@ -69,21 +70,7 @@ class _PostsScreenState extends State<PostsScreen> {
                         const SizedBox(height: AppConstants.spacingS),
                     itemBuilder: (context, index) {
                       final post = provider.posts[index];
-                      return Card(
-                        child: ListTile(
-                          leading: CircleAvatar(child: Text('${post.id}')),
-                          title: Text(
-                            post.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Text(
-                            post.body,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      );
+                      return PostItemCard(post: post);
                     },
                   ),
                 ),
