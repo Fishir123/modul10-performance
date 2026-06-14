@@ -1,0 +1,2 @@
+SEBELUM optimasi: HOMESCREEN_REBUILD_COUNT=15 (5x toggle dark mode)
+Penyebab: context.watch<ThemeProvider>() di build() utama -> seluruh HomeScreen (semua FeatureCard + teks) rebuild tiap toggle.

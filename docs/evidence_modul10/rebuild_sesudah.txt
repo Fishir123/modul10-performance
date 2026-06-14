@@ -1,0 +1,2 @@
+SESUDAH optimasi: HOMESCREEN_REBUILD_COUNT=10 (5x toggle dark mode)
+Perbaikan: context.watch dipindah dari build() utama ke widget _DarkModeCard (Consumer). build() HomeScreen tidak lagi ikut berjalan karena subscription ThemeProvider; 5 rebuild redundan hilang (15 -> 10). Sisa 10 = rebuild wajar dari Theme.of (inherited widget) yang tidak terhindarkan.
